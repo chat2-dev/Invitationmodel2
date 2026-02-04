@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Wedding Invitation | Arjun & Bhavya</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:'Georgia',serif;
+  background:#faf7f4;
+  color:#333;
+  text-align:center;
+}
+
+/* VENUE HERO (CLIENT PHOTO) */
+.venue-hero{position:relative;overflow:hidden;}
+.venue-hero img{
+  width:100%;
+  max-height:450px;
+  object-fit:cover;
+}
+.venue-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(0,0,0,0.25),rgba(0,0,0,0.55));
+  display:flex;flex-direction:column;justify-content:center;
+  color:#fff;
+}
+.venue-overlay h1{font-size:3rem;margin:0;letter-spacing:1px;}
+.venue-overlay h2{font-weight:normal;margin-top:10px;}
+
+section{padding:50px 20px;}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(40px);transition:1s ease;}
+.reveal.active{opacity:1;transform:none;}
+
+/* CLOCK SECTION */
+.clock-section{background:#fff;position:relative;}
+.clock-wrapper{display:flex;justify-content:center;position:relative;}
+
+/* DIYA GLOW */
+.diya{
+  position:absolute;
+  width:14px;height:14px;
+  background:radial-gradient(circle,#ffd27d,#ff9800);
+  border-radius:50%;
+  filter:blur(1px);
+  animation:flicker 1.5s infinite alternate;
+}
+.diya.left{left:-30px;top:50%;}
+.diya.right{right:-30px;top:50%;}
+@keyframes flicker{
+  from{opacity:0.6;transform:scale(1);}to{opacity:1;transform:scale(1.3);}
+}
+
+.clock{
+  width:220px;height:220px;
+  border:10px solid #cfa27c;
+  border-radius:50%;
+  background:radial-gradient(circle,#fff 60%,#f1e1cc);
+  box-shadow:0 15px 40px rgba(0,0,0,0.25);
+  position:relative;
+}
+.clock::after{
+  content:'';width:10px;height:10px;background:#333;border-radius:50%;
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+}
+.hand{position:absolute;bottom:50%;left:50%;transform-origin:bottom;transform:translateX(-50%);}
+.hour{width:6px;height:55px;background:#333;border-radius:4px;}
+.minute{width:4px;height:80px;background:#555;border-radius:4px;}
+.second{width:2px;height:95px;background:#cfa27c;}
+
+.muhurat{
+  margin-top:20px;
+  font-size:1.1rem;
+  color:#8a5a2b;
+  font-style:italic;
+}
+
+/* COUNTDOWN */
+.countdown{background:#fff3e6;}
+#timer{display:flex;justify-content:center;gap:15px;}
+#timer div{background:#fff;padding:15px;border-radius:8px;min-width:80px;}
+
+/* GALLERY */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;max-width:800px;margin:auto;}
+.gallery-grid img{width:100%;border-radius:8px;}
+
+/* RSVP */
+form{max-width:400px;margin:auto;}
+input,select,button{width:100%;padding:12px;margin:10px 0;font-size:1rem;}
+button{background:#cfa27c;border:none;color:#fff;cursor:pointer;}
+button:hover{background:#b48b63;}
+
+footer{background:#eee;padding:20px;font-size:0.9rem;}
+</style>
+</head>
+<body>
+
+<!-- CLIENT VENUE PHOTO -->
+<div class="venue-hero">
+  <img src="CLIENT_VENUE_PHOTO.jpg" alt="Wedding Venue">
+  <div class="venue-overlay">
+    <h1>Arjun & Bhavya</h1>
+    <p>invite you to celebrate their union</p>
+    <h2>15 June 2026</h2>
+  </div>
+</div>
+
+<!-- CLOCK CENTER -->
+<section class="clock-section reveal">
+  <h3>The Auspicious Moment</h3>
+  <div class="clock-wrapper">
+    <span class="diya left"></span>
+    <div class="clock">
+      <div class="hand hour" id="hourHand"></div>
+      <div class="hand minute" id="minuteHand"></div>
+      <div class="hand second" id="secondHand"></div>
+    </div>
+    <span class="diya right"></span>
+  </div>
+  <div class="muhurat" id="muhuratText"></div>
+</section>
+
+<section class="countdown reveal">
+  <h3>Countdown to the Big Day</h3>
+  <div id="timer">
+    <div><span id="days">0</span><br>Days</div>
+    <div><span id="hours">0</span><br>Hours</div>
+    <div><span id="minutes">0</span><br>Minutes</div>
+    <div><span id="seconds">0</span><br>Seconds</div>
+  </div>
+</section>
+
+<section class="reveal">
+  <h3>Our Moments</h3>
+  <div class="gallery-grid">
+    <img src="https://picsum.photos/400/300?1">
+    <img src="https://picsum.photos/400/300?2">
+    <img src="https://picsum.photos/400/300?3">
+    <img src="https://picsum.photos/400/300?4">
+  </div>
+</section>
+
+<section class="reveal">
+  <h3>RSVP</h3>
+  <form id="rsvpForm">
+    <input name="entry.111111" placeholder="Your Name" required>
+    <input name="entry.222222" type="number" placeholder="Guests" required>
+    <select name="entry.333333" required>
+      <option value="">Will you attend?</option>
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
+    <button type="submit">Submit RSVP</button>
+  </form>
+  <p id="responseMsg"></p>
+</section>
+
+<footer>With love ❤️ | Designed by You</footer>
+
+<script>
+// ANALOG CLOCK
+function updateAnalogClock(){
+  const now=new Date();
+  const s=now.getSeconds();
+  const m=now.getMinutes();
+  const h=now.getHours();
+  secondHand.style.transform=`translateX(-50%) rotate(${s*6}deg)`;
+  minuteHand.style.transform=`translateX(-50%) rotate(${m*6}deg)`;
+  hourHand.style.transform=`translateX(-50%) rotate(${h*30+m/2}deg)`;
+}
+setInterval(updateAnalogClock,1000);updateAnalogClock();
+
+// SHUBH MUHURAT SYNC
+const muhuratText=document.getElementById('muhuratText');
+setInterval(()=>{
+  const now=new Date();
+  const time=now.getHours()+now.getMinutes()/60;
+  muhuratText.innerText=(time>=18.5 && time<=20)?'🪔 Shubh Muhurat is active':'Awaiting the Shubh Muhurat';
+},60000);
+
+// COUNTDOWN
+const weddingDate=new Date('June 15, 2026 19:00:00').getTime();
+setInterval(()=>{
+  const gap=weddingDate-new Date().getTime();
+  days.innerText=Math.floor(gap/(1000*60*60*24));
+  hours.innerText=Math.floor((gap/(1000*60*60))%24);
+  minutes.innerText=Math.floor((gap/(1000*60))%60);
+  seconds.innerText=Math.floor((gap/1000)%60);
+},1000);
+
+// SCROLL REVEAL
+window.addEventListener('scroll',()=>{
+  document.querySelectorAll('.reveal').forEach(el=>{
+    if(el.getBoundingClientRect().top<window.innerHeight-80)
+      el.classList.add('active');
+  });
+});
+
+// RSVP GOOGLE SHEETS
+const form=document.getElementById('rsvpForm');
+form.addEventListener('submit',e=>{
+  e.preventDefault();
+  fetch('https://docs.google.com/forms/d/e/FORM_ID/formResponse',{method:'POST',mode:'no-cors',body:new FormData(form)})
+  .then(()=>{responseMsg.innerText='RSVP submitted successfully ❤️';form.reset();});
+});
+</script>
+</body>
+  </html>
+  
