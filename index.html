@@ -200,12 +200,24 @@ window.addEventListener('scroll',()=>{
   });
 });
 
-// RSVP GOOGLE SHEETS
-const form=document.getElementById('rsvpForm');
-form.addEventListener('submit',e=>{
-  e.preventDefault();
-  fetch('https://docs.google.com/forms/d/e/FORM_ID/formResponse',{method:'POST',mode:'no-cors',body:new FormData(form)})
-  .then(()=>{responseMsg.innerText='RSVP submitted successfully ❤️';form.reset();});
+// RSVP WHATSAPP NOTIFICATION (CLIENT RECEIVES MESSAGE)
+rsvpForm.addEventListener('submit',e=>{
+e.preventDefault();
+const name=rsvpForm.name.value;
+const guests=rsvpForm.guests.value;
+const attending=rsvpForm.attending.value;
+
+
+const msg=`RSVP Received:%0AName: ${name}%0AGuests: ${guests}%0AAttending: ${attending}`;
+
+
+// Replace country code + number
+const phone="+916370602852";
+
+
+window.open(`https://wa.me/${phone}?text=${msg}`,'_blank');
+responseMsg.innerText='WhatsApp opened. RSVP sent to client.';
+rsvpForm.reset();
 });
 </script>
 </body>
