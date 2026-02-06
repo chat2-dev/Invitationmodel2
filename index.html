@@ -201,24 +201,27 @@ window.addEventListener('scroll',()=>{
 });
 
 // RSVP WHATSAPP NOTIFICATION (CLIENT RECEIVES MESSAGE)
-rsvpForm.addEventListener('submit',e=>{
-e.preventDefault();
-const name=rsvpForm.name.value;
-const guests=rsvpForm.guests.value;
-const attending=rsvpForm.attending.value;
+const rsvpForm = document.getElementById('rsvpForm');
 
+rsvpForm.addEventListener('submit', function (e) {
+  e.preventDefault();
 
-const msg=`RSVP Received:%0AName: ${name}%0AGuests: ${guests}%0AAttending: ${attending}`;
+  const name = rsvpForm.querySelector('[name="entry.111111"]').value;
+  const guests = rsvpForm.querySelector('[name="entry.222222"]').value;
+  const attending = rsvpForm.querySelector('[name="entry.333333"]').value;
 
+  const msg = encodeURIComponent(
+    `RSVP Received\nName: ${name}\nGuests: ${guests}\nAttending: ${attending}`
+  );
 
-// Replace country code + number
-const phone="916370602852";
+  const phone = "916370602852"; // countrycode+number
 
+  window.location.href = `https://wa.me/${phone}?text=${msg}`;
 
-window.open(`https://wa.me/${phone}?text=${msg}`,'_blank');
-responseMsg.innerText='WhatsApp opened. RSVP sent to client.';
-rsvpForm.reset();
+  responseMsg.innerText = "Opening WhatsApp…";
+  rsvpForm.reset();
 });
+  
 </script>
 </body>
   </html>
